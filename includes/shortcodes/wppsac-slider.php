@@ -71,8 +71,16 @@ function get_wppsac_slider( $atts, $content = null ) {
 	// Taking some global
 	global $post;
 	
-	$current_post = $post->ID;
-//	echo $current_post;
+	// Get lang if multi
+	$lang = 'none';
+    // Prise en charge Polylang
+	if( function_exists('pll_current_language') ){
+		$lang = pll_current_language();
+    }
+    
+    if( defined('ICL_LANGUAGE_CODE') ){
+        $lang = ICL_LANGUAGE_CODE;
+    }
 
 	ob_start();
 		
@@ -96,8 +104,18 @@ function get_wppsac_slider( $atts, $content = null ) {
 											'terms' 		=> $cat,
 								));
 	}
+	
+	// name for transient
+	$tansient_name = 'rdrit_'. $lang .'_'md5(json_encode($args));
 
-	$query = new WP_Query($args);
+	// Get posts
+	$query = get_transient($tansient_name);
+    if(false === $query){
+        $query = new WP_Query($args);
+        set_transient( $tansient_name, $query = new WP_Query($args);, 3 * HOUR_IN_SECONDS );
+    }
+
+	//$query = new WP_Query($args);
 	$post_count = $query->post_count;
          
              if ( $query->have_posts() ) :
