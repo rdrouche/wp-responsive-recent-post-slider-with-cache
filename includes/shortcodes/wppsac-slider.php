@@ -106,13 +106,13 @@ function get_wppsac_slider( $atts, $content = null ) {
 	}
 	
 	// name for transient
-	$tansient_name = 'rdrit_'. $lang .'_'md5(json_encode($args));
+	$tansient_name = 'rdrit_'. $lang .'_' . md5(json_encode($args));
 
 	// Get posts
 	$query = get_transient($tansient_name);
     if(false === $query){
         $query = new WP_Query($args);
-        set_transient( $tansient_name, $query = new WP_Query($args);, 3 * HOUR_IN_SECONDS );
+        set_transient( $tansient_name, $query, 3 * HOUR_IN_SECONDS );
     }
 
 	//$query = new WP_Query($args);
